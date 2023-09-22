@@ -1,0 +1,19 @@
+{
+  "name": "pixel-simulation",
+  "module": "src/server/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest",
+    "typed-html": "^3.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@elysiajs/html": "^0.7.0",
+    "elysia": "^0.7.12"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/server/index.tsx"
+  }
+}
