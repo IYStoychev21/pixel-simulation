@@ -81,6 +81,20 @@ app.get('/size/:width/:hight', ({ params }) => {
     }
 )
 
+app.get('/grid/start', () => {
+    return <div hx-get="/grid/update" hx-swap="outerHTML" hx-target="#cellGrid" hx-trigger="every 0.1s" id="trigger"></div>
+})
+
+app.get('/grid/update', () => {
+    console.log("updating")
+    return <Grid cellsWidth={gridSize.width} cells={gridCells} gridSize={gridCellSize}/>
+})
+
+app.get('/grid/stop', () => {
+    console.log("end")
+    return <button hx-get="/grid/start" hx-swap="outerHTML" class="p-2 bg-emerald-400 rounded-md hover:scale-105 active:scale-100 hover:bg-emerald-500 duration-150">Start Scene</button>
+})
+
 app.listen(3000, () => {
     console.log('Example app listening on port 3000!');
 });

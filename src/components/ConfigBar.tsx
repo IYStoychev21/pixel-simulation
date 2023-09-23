@@ -24,6 +24,11 @@ export const ConfigBar = () => {
         <div class="h-20 flex items-center justify-center bg-slate-400">
             <div hx-get="/element/get" hx-trigger="load" hx-swap="outerHTML"></div>
             <div hx-get="/element/list" hx-trigger="load" hx-swap="outerHTML"></div>
+
+            <div class="absolute right-3 flex gap-3">
+                <button hx-get="/grid/start" hx-swap="outerHTML" class="p-2 bg-emerald-400 rounded-md hover:scale-105 active:scale-100 hover:bg-emerald-500 duration-150">Start Scene</button>
+                <button hx-get="/grid/stop" hx-swap="outerHTML" hx-target="#trigger" class="p-2 bg-emerald-400 rounded-md hover:scale-105 active:scale-100 hover:bg-emerald-500 duration-150">End Scene</button>
+            </div>
         </div>
     )
 }

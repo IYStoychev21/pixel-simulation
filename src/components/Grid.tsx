@@ -7,6 +7,9 @@ export const GridCell = ({ id, elementId, type, color, width, height, top, left 
     )
 }
 
+setInterval(() => {
+}, 0.1);
+
 export const Grid = ({cellsWidth, cells, gridSize}: any) => {
     let i = -1;
     let j = -1;
@@ -14,9 +17,10 @@ export const Grid = ({cellsWidth, cells, gridSize}: any) => {
     let left = -gridSize;
 
     return (
+
         <div id="cellGrid" class={`h-[calc(100%-80px)] w-full flex flex-col relative`}>
             {
-                cells.map((cell: el) => {
+                cells?.map((cell: el) => {
                     j++;
                     i++;
 
