@@ -18,6 +18,8 @@ const elementList: el[] = [
     { id: 1, type: "sand", color: "bg-amber-300" },
     { id: 2, type: "water", color: "bg-cyan-500" },
     { id: 3, type: "wood", color: "bg-yellow-900" },
+    { id: 4, type: "fire", color: "bg-red-700" },
+    { id: 5, type: "smoke", color: "bg-zinc-800" },
 ];
 
 let gridCells: el[];
@@ -134,12 +136,14 @@ app.get("/grid/start", () => {
             hx-get="/grid/update"
             hx-swap="outerHTML"
             hx-target="#cellGrid"
-            hx-trigger="every 0.01s"
+            hx-trigger="every 0.05ss"
             id="trigger"
         ></div>
     );
 });
 
+let destroyTimer = 10;
+let destroySmoke = 15;
 app.get("/grid/update", () => {
     for (let index = 0; index < gridCells.length; index++) {
         const element = gridCells[index];
@@ -221,7 +225,144 @@ app.get("/grid/update", () => {
                         color: "bg-transparent",
                     };
                 }
+            }
 
+            //* Fire
+            if (element.type === "fire") {
+                if (gridCells[index + gridSize.width]?.type === "wood") {
+
+                    if(destroyTimer > 0)
+                    {
+                        destroyTimer--;
+                        break;
+                    }
+                    
+                    gridCells[index + gridSize.width] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    gridCells[index] = elementList[4];
+
+
+                    break;
+                } else if (
+                    gridCells[index + gridSize.width - 1]?.type === "wood"
+                ) {
+                    if(destroyTimer > 0)
+                    {
+                        destroyTimer--;
+                        break;
+                    }
+                    
+                    gridCells[index + gridSize.width - 1] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+
+                    gridCells[index] = elementList[4];
+
+
+                    break;
+                } else if (
+                    gridCells[index + gridSize.width + 1]?.type === "wood"
+                ) {
+
+                    if(destroyTimer > 0)
+                    {
+                        destroyTimer--;
+                        break;
+                    }
+
+                    gridCells[index + gridSize.width + 1] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+
+                    gridCells[index] = elementList[4];
+
+
+                    break;
+                } else if (gridCells[index + 1]?.type === "wood") {
+                    if(destroyTimer > 0)
+                    {
+                        destroyTimer--;
+                        break;
+                    }
+
+                    gridCells[index + 1] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+
+                    gridCells[index] = elementList[4];
+
+                } else if (gridCells[index - 1]?.type === "wood") {
+                    if(destroyTimer > 0)
+                    {
+                        destroyTimer--;
+                        break;
+                    }
+
+                    gridCells[index - 1] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+
+                    gridCells[index] = elementList[4];
+
+                    destroyTimer = 20;
+                }
+            }
+
+            //* Smoke
+            if (element.type === "smoke") {
+
+                if(destroySmoke == 0)
+                {
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+
+                    destroySmoke = 15;
+                    break;
+                }
+
+                destroySmoke--;
+
+                if (gridCells[index - gridSize.width]?.type === "None") {
+                    gridCells[index - gridSize.width] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    // break;
+                } else if (
+                    gridCells[index + gridSize.width - 1]?.type === "None" && index > 0 ) {
+                    gridCells[index + gridSize.width - 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    // break;
+                } else if (
+                    gridCells[index + gridSize.width + 1]?.type === "None" && index < gridCells?.length - 1 ) {
+                    gridCells[index + gridSize.width + 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    // break;
+                }
             }
         }
     }
