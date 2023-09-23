@@ -1,4 +1,4 @@
-import * as elements from "typed-html"
+import * as elements from "typed-html";
 
 export const BaseHTML = ({ children }: elements.Children) => `
 <!DOCTYPE html>
@@ -60,4 +60,4 @@ export const BaseHTML = ({ children }: elements.Children) => `
 
 ${children}
 </html>
-`
+`;
