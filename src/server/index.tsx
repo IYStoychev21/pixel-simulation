@@ -17,6 +17,7 @@ let selectedElement: el = { id: 0, type: "None", color: "bg-white" };
 const elementList: el[] = [
     { id: 1, type: "sand", color: "bg-amber-300" },
     { id: 2, type: "water", color: "bg-cyan-500" },
+    { id: 3, type: "wood", color: "bg-yellow-900" },
 ];
 
 let gridCells: el[];
@@ -105,14 +106,19 @@ app.post("/element/set/:id", ({ params }) => {
     const tempSelElement = elementList.find(
         (element) => element.id === parseInt(params.id)
     );
+
     selectedElement = tempSelElement as el;
-    return (
-        <SelectedElementComponent
-            id={tempSelElement?.id}
-            type={tempSelElement?.type}
-            color={tempSelElement?.color}
-        />
-    );
+
+    if(tempSelElement != undefined)
+    {
+        return (
+            <SelectedElementComponent
+                id={tempSelElement?.id}
+                type={tempSelElement?.type}
+                color={tempSelElement?.color}
+            />
+        );
+    }
 });
 
 app.get("/size/:width/:hight", ({ params }) => {
@@ -135,7 +141,7 @@ app.get("/grid/start", () => {
 });
 
 app.get("/grid/update", () => {
-    for (let index = gridCells.length; index > 0; index--) {
+    for (let index = 0; index < gridCells.length; index++) {
         const element = gridCells[index];
 
         if (index + gridSize.width < gridCells?.length) {
@@ -172,7 +178,51 @@ app.get("/grid/update", () => {
                 }
             }
 
-            //* Water
+            if(element.type === "water")
+            {
+                if (gridCells[index + gridSize.width]?.type === "None") {
+                    gridCells[index + gridSize.width] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    break;
+                } else if (
+                    gridCells[index + gridSize.width - 1]?.type === "None" ) {
+                    gridCells[index + gridSize.width - 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    break;
+                } else if (
+                    gridCells[index + gridSize.width + 1]?.type === "None" ) {
+                    gridCells[index + gridSize.width + 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                    break;
+                } else if (gridCells[index + 1]?.type === "None" && index < gridCells?.length - 1) {
+                    gridCells[index + 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                } else if (gridCells[index - 1]?.type === "None" && index > 0) {
+                    gridCells[index - 1] = element;
+                    gridCells[index] = {
+                        id: 0,
+                        type: "None",
+                        color: "bg-transparent",
+                    };
+                }
+
+            }
         }
     }
 
