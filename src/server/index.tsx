@@ -4,6 +4,7 @@ import * as elements from "typed-html"
 
 import { BaseHTML } from '../components/BaseHTML';
 import { ConfigBar, SelectedElementComponent, ElementComponent } from '../components/ConfigBar';
+import { Grid } from '../components/Grid';
 
 import { el } from "../types/element"
 
@@ -14,18 +15,34 @@ const elementList: el[] = [
     {id: 2, type: "water", color: "bg-cyan-500"}
 ]
 
+let gridCells: el[];
+
+let gridCellSize = 64;
+let screeenSize = {width: 0, height: 0}
+let gridSize = {width: 0, height: 0}
+
 const app = new Elysia();
 app.use(html())
 
 app.get('/', ({ html }: any) => {
     return html(
         <BaseHTML>
-            <body class='bg-slate-300'>
+            <body class='bg-slate-300 h-full'>
                 <ConfigBar />
+                <div hx-get="/grid/get" hx-trigger="load" hx-swap="outerHTML"></div>
             </body>
         </BaseHTML>
     )
 });
+
+app.get('/grid/get', ({ html }: any) => {
+    gridSize = {width: Math.floor((screeenSize.width) / gridCellSize), height: Math.floor((screeenSize.height - 80) / gridCellSize)}
+    gridCells = Array(gridSize.width * gridSize.height).fill({id: 0, type: "None", color: "bg-transparent"})
+
+    return html(
+        <Grid cellsWidth={gridSize.width} cells={gridCells} gridSize={gridCellSize}/>
+    )
+})
 
 app.get('/element/get', ({ html }: any) => {
     return html(
@@ -48,6 +65,11 @@ app.get('/element/list', ({ html }: any) => {
 app.post('/element/set/:id', ({ params }) => {
         const tempSelElement = elementList.find(element => element.id === parseInt(params.id))
         return  <SelectedElementComponent id={tempSelElement?.id} type={tempSelElement?.type} color={tempSelElement?.color}/>
+    }
+)
+
+app.get('/size/:width/:hight', ({ params }) => {
+        screeenSize = {width: parseInt(params.width), height: parseInt(params.hight)}
     }
 )
 
