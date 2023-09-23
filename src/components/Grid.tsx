@@ -3,7 +3,7 @@ import { el } from '../types/element';
 
 export const GridCell = ({ id, elementId, type, color, width, height, top, left }: any) => {
     return (
-        <div id={`${elementId} ${id}`} class={`h-${height / 4} w-${width / 4} ${color} cursor-pointer border-slate-400 absolute border hover:border-slate-800 duration-75`} style={`top: ${top}px; left: ${left}px;`} ></div>
+        <div hx-post={`/grid/set/${id}`} hx-swap="outerHTML" hx-target="#cellGrid" id={`${elementId} ${id}`} class={`h-${height / 4} w-${width / 4} ${color} cursor-pointer border-slate-400 absolute border hover:border-slate-800 duration-75`} style={`top: ${top}px; left: ${left}px;`} ></div>
     )
 }
 
@@ -14,7 +14,7 @@ export const Grid = ({cellsWidth, cells, gridSize}: any) => {
     let left = -gridSize;
 
     return (
-        <div class={`h-[calc(100%-80px)] w-full flex flex-col relative`} >
+        <div id="cellGrid" class={`h-[calc(100%-80px)] w-full flex flex-col relative`}>
             {
                 cells.map((cell: el) => {
                     j++;

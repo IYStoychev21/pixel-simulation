@@ -62,8 +62,16 @@ app.get('/element/list', ({ html }: any) => {
     )
 })
 
+app.post('grid/set/:cellid', ({ params }) => {
+    if(selectedElement.type !== "None")
+        gridCells[parseInt(params.cellid)] = selectedElement;
+        return <Grid cellsWidth={gridSize.width} cells={gridCells} gridSize={gridCellSize}/>
+    }
+)
+
 app.post('/element/set/:id', ({ params }) => {
         const tempSelElement = elementList.find(element => element.id === parseInt(params.id))
+        selectedElement = tempSelElement as el
         return  <SelectedElementComponent id={tempSelElement?.id} type={tempSelElement?.type} color={tempSelElement?.color}/>
     }
 )
